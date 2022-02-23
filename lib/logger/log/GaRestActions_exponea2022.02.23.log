@@ -1,0 +1,81 @@
+2022.02.23 14:46:08 Array
+(
+    [ID_OPERATION] => rest_api_62161e808a5e2
+    [DATE] => 1645616768
+    [TYPE] => exponea
+    [ACTION] => CustomLink_AddHL
+    [IP CLIENT] => 127.0.0.1
+    [POST] => Array
+        (
+            [AUTH_FORM] => Y
+            [TYPE] => AUTH
+            [USER_LOGIN] => admin
+            [USER_PASSWORD] => lbr100ru
+            [LOGIN] => 
+            [USER_REMEMBER] => Y
+            [action] => CustomLink_AddHL
+            [out] => json
+            [arg] => Array
+                (
+                    [arFields] => Array
+                        (
+                            [CUSTOM_URL] => {"URL":"https:\/\/test.rufffsfs\/\u041f2\u0440\u0438\u0432\u0435\u0442\/","UTM":"testarg=te2st&iitt=#iitt#"}
+                            [TIME] => {"DAYS":"20","FORMAT":"Y-m-d"}
+                        )
+
+                )
+
+            [token] => fd17db9e-573f-11ec-8e19-5ef6ea01c408
+            [typeAction] => exponea
+        )
+
+    [GET] => Array
+        (
+        )
+
+)
+
+2022.02.23 14:46:08 Array
+(
+    [ID_OPERATION] => rest_api_62161e808c118
+    [DATE] => 1645616768
+    [TYPE] => exponea
+    [ACTION] => CustomLink_AddHL
+    [IP CLIENT] => 127.0.0.1
+    [POST] => Array
+        (
+            [AUTH_FORM] => Y
+            [TYPE] => AUTH
+            [USER_LOGIN] => admin
+            [USER_PASSWORD] => lbr100ru
+            [LOGIN] => 
+            [USER_REMEMBER] => Y
+            [action] => CustomLink_AddHL
+            [out] => json
+            [arg] => Array
+                (
+                    [arFields] => Array
+                        (
+                            [CUSTOM_URL] => {"URL":"https:\/\/test.rufffsfs\/\u041f2\u0440\u0438\u0432\u0435\u0442\/","UTM":"testarg=te2st&iitt=#iitt#"}
+                            [TIME] => {"DAYS":"20","FORMAT":"Y-m-d"}
+                        )
+
+                )
+
+            [token] => fd17db9e-573f-11ec-8e19-5ef6ea01c408
+            [typeAction] => exponea
+        )
+
+    [GET] => Array
+        (
+        )
+
+)
+
+2022.02.23 14:46:08 Array
+(
+    [ID_OPERATION] => rest_api_62161e808a5e2
+    [DATE] => 1645616768
+    [ANSWER_SERVER] => {"success":true,"timestamp_start":"0.57371500 1645616768","timestamp_end":"0.77489300 1645616768","data":{"short_link":"http://ga.rest.local/sl/c3/?testarg=te2st&amp;iitt=","long_link":"https://test.rufffsfs/П2ривет/","shortlink_code":"sl/c3/","id_link":2,"date_active_to":"2022-03-15","date_active_from":"2022-02-19"}}
+)
+
