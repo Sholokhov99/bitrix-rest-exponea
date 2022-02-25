@@ -165,5 +165,3 @@ class Ui extends Source
         return is_string($content) ? $content : "";
     }
 }
-
-?>
