@@ -4,6 +4,7 @@ namespace Ga\Rest\Actions;
 
 use Bitrix\Main\Localization\Loc;
 use Ga\Rest\Api\Security;
+use Ga\Rest\Exception\ApiException;
 use Ga\Rest\Tools\Http\ResponseCode;
 use Ga\Rest\Api\Interfaces\InterfaceRest;
 
@@ -54,10 +55,7 @@ class Rest extends Security implements InterfaceRest
     public function route(): void
     {
         $this->setOut((string)$this->request->getPost("out"));
-
-        $namespace = __NAMESPACE__ . '\\' . ucfirst(
-                strtolower($this->request->getPost($this->keyNameNamespaceAction))
-            ) . '\\' . ucfirst(strtolower($this->request->getPost($this->keyNameClassAction)));
+        $namespace = __NAMESPACE__ . '\\' . $this->getClassNameAction(). '\\' . $this->getClassNameAction();
 
         if (class_exists($namespace) && method_exists($namespace, $this->nameFunctionStartAction)) {
             $this->action = new $namespace;
@@ -70,8 +68,25 @@ class Rest extends Security implements InterfaceRest
         static::$answer->clearAnswer();
 
         $this->logAnswer($answer);
-
         echo $answer;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNamespaceAction(): string
+    {
+        $namespace = ucfirst(strtolower($this->request->getPost($this->keyNameNamespaceAction)));
+        return is_string($namespace) ? $namespace : "";
+    }
+
+    /**
+     * @return string
+     */
+    protected function getClassNameAction(): string
+    {
+        $className = ucfirst(strtolower($this->request->getPost($this->keyNameClassAction)));
+        return is_string($className) ? $className : "";
     }
 
     /**
@@ -100,7 +115,6 @@ class Rest extends Security implements InterfaceRest
         if (strlen($format) === 0) {
             $format = $this->defaultDateFormat;
         }
-
         return date_format(date_create($date), $format);
     }
 
