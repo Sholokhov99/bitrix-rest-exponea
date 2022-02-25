@@ -21,4 +21,3 @@ class Application
         Events::autoload();
     }
 }
-?>
