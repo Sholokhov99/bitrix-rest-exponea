@@ -54,7 +54,7 @@ class Source extends Errors
         $this->iblockShortLink = new ShortLinks();
         $this->countersShortLinks = new CountersShortLinks();
     }
-
+    
     /**
      * @param string $code
      * @return string
