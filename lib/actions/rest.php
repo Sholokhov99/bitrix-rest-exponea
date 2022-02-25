@@ -97,13 +97,11 @@ class Rest extends Security implements InterfaceRest
      */
     protected function getNewDateFormat(string $date, string $format): string
     {
-        $d = date_create($date);
-
         if (strlen($format) === 0) {
             $format = $this->defaultDateFormat;
         }
 
-        return date_format($d, $format);
+        return date_format(date_create($date), $format);
     }
 
     /**
@@ -127,7 +125,7 @@ class Rest extends Security implements InterfaceRest
     private function checkSecurity(): void
     {
         if($this->checkAccess() === false) {
-            ResponseCode::setForbiden($this->generateAnswer());
+            ResponseCode::setForbiden(static::$answer->generateAnswer());
         }
 
         if($this->isTechnicalWork()) {
@@ -135,5 +133,3 @@ class Rest extends Security implements InterfaceRest
         }
     }
 }
-
-?>

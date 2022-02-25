@@ -40,6 +40,12 @@ abstract class Answer implements InterfaceAnswer
     }
 
     /**
+     * Создать ответ сервера
+     * @return string
+     */
+    abstract protected function generateAnswer(): string;
+
+    /**
      * @return array
      */
     public function getErrorByArray(): array
@@ -167,11 +173,4 @@ abstract class Answer implements InterfaceAnswer
         $this->dataAnswer = array();
     }
 
-    /**
-     * Создать ответ сервера
-     * @return string
-     */
-    abstract protected function generateAnswer(): string;
 }
-
-?>

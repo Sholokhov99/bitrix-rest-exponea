@@ -27,8 +27,6 @@ class Answer extends ApiAnswer
 
         $this->answer = Json::encode($arAnswer, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-        return $this->answer;
+        return is_string($this->answer) ? $this->answer : "";
     }
 }
-
-?>

@@ -130,11 +130,10 @@ class CustomLink_AddHL extends Rest implements InterfaceAction
 
         if (static::$answer->emptyError()) {
             return true;
-        } else {
-            $this->collectionData = null;
-
-            return false;
         }
+
+        $this->collectionData = null;
+        return false;
     }
 
     /**
@@ -269,7 +268,7 @@ class CustomLink_AddHL extends Rest implements InterfaceAction
             $this->utm = $this->collectionData[self::PROPERTY_UTM_CODE];
         }
 
-        return $success;
+        return (bool)$success;
     }
 
     /**
@@ -326,9 +325,7 @@ class CustomLink_AddHL extends Rest implements InterfaceAction
     {
         if (count($this->collectionLongUrl) === 0) {
             static::$answer->setError(Loc::getMessage("ERROR_NOT_FOUND_PRODUCT"));
-        } elseif (isset($this->collectionLongUrl[self::PROPERTY_URL_CODE]) === false || is_string(
-                $this->collectionLongUrl[self::PROPERTY_URL_CODE]
-            ) === false || strlen(
+        } elseif (is_string($this->collectionLongUrl[self::PROPERTY_URL_CODE]) === false || strlen(
                 $this->collectionLongUrl[self::PROPERTY_URL_CODE]
             ) === 0) {
             static::$answer->setError(Loc::getMessage("ERROR_LONG_URL_NOT_FOUND"));
@@ -359,10 +356,10 @@ class CustomLink_AddHL extends Rest implements InterfaceAction
      */
     protected function createCustomLink(): void
     {
-        $this->collectionLongUrl = array(
+        $this->collectionLongUrl = [
             self::PROPERTY_URL_CODE => $this->collectionData[self::PROPERTY_URL_CODE],
-            "ID" => 0
-        );
+            "ID" => 0,
+        ];
     }
 
     /**
@@ -475,12 +472,10 @@ class CustomLink_AddHL extends Rest implements InterfaceAction
      */
     protected function getDefaultDataTime(): array
     {
-        return array(
+        return [
             self::PROPERTY_DAYS_CODE => 0,
             self::PROPERTY_FORMAT_CODE => $this->defaultDateFormat
-        );
+        ];
     }
 
 }
-
-?>
