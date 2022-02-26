@@ -357,107 +357,6 @@ class rest_exponea extends CModule
         return __DIR__ . "/install";
     }
 
-    function GetModuleTasks()
-    {
-        return array(
-            'iblock_deny' => array(
-                'LETTER' => 'D',
-                'BINDING' => 'iblock',
-                'OPERATIONS' => array()
-            ),
-            'iblock_read' => array(
-                'LETTER' => 'R',
-                'BINDING' => 'iblock',
-                'OPERATIONS' => array(
-                    'section_read',
-                    'element_read'
-                )
-            ),
-            'iblock_element_add' => array(
-                'LETTER' => 'E',
-                'BINDING' => 'iblock',
-                'OPERATIONS' => array(
-                    'section_element_bind'
-                )
-            ),
-            'iblock_admin_read' => array(
-                'LETTER' => 'S',
-                'BINDING' => 'iblock',
-                'OPERATIONS' => array(
-                    'iblock_admin_display',
-                    'section_read',
-                    'element_read'
-                )
-            ),
-            'iblock_admin_add' => array(
-                'LETTER' => 'T',
-                'BINDING' => 'iblock',
-                'OPERATIONS' => array(
-                    'iblock_admin_display',
-                    'section_read',
-                    'section_element_bind',
-                    'element_read',
-                )
-            ),
-            'iblock_limited_edit' => array(
-                'LETTER' => 'U',
-                'BINDING' => 'iblock',
-                'OPERATIONS' => array(
-                    'iblock_admin_display',
-                    'section_read',
-                    'section_element_bind',
-                    'element_read',
-                    'element_edit',
-                    'element_edit_price',
-                    'element_delete',
-                    'element_bizproc_start'
-                )
-            ),
-            'iblock_full_edit' => array(
-                'LETTER' => 'W',
-                'BINDING' => 'iblock',
-                'OPERATIONS' => array(
-                    'iblock_admin_display',
-                    'section_read',
-                    'section_edit',
-                    'section_delete',
-                    'section_element_bind',
-                    'section_section_bind',
-                    'element_read',
-                    'element_edit',
-                    'element_edit_price',
-                    'element_delete',
-                    'element_edit_any_wf_status',
-                    'element_bizproc_start'
-                )
-            ),
-            'iblock_full' => array(
-                'LETTER' => 'X',
-                'BINDING' => 'iblock',
-                'OPERATIONS' => array(
-                    'iblock_admin_display',
-                    'iblock_edit',
-                    'iblock_delete',
-                    'iblock_rights_edit',
-                    'iblock_export',
-                    'section_read',
-                    'section_edit',
-                    'section_delete',
-                    'section_element_bind',
-                    'section_section_bind',
-                    'section_rights_edit',
-                    'element_read',
-                    'element_edit',
-                    'element_edit_price',
-                    'element_delete',
-                    'element_edit_any_wf_status',
-                    'element_bizproc_start',
-                    'element_rights_edit'
-                )
-            )
-        );
-    }
-
     /**
      * Добавление ошибки
      * @param string $msg
@@ -532,7 +431,6 @@ class rest_exponea extends CModule
     {
         $iblock = new CIBlock;
         $idIblock = $iblock->Add($collectionIblock);
-        # Необходимо записать данные в БД
 
         # Создание свойств
         if ($idIblock) {
@@ -553,6 +451,7 @@ class rest_exponea extends CModule
             return false;
         }
 
+        \COption::SetOptionInt($this->MODULE_ID, "IBLOCK_ID_{$collectionIblock['CODE']}", $idIblock);
         return true;
     }
 
