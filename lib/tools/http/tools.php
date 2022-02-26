@@ -1,6 +1,6 @@
 <?php
 
-namespace Ga\Rest\Tools\Http;
+namespace Rest\Exponea\Tools\Http;
 
 use Bitrix\Main\Application;
 use Bitrix\Main\Web\Uri;

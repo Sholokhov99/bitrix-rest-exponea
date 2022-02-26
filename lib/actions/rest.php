@@ -1,12 +1,12 @@
 <?php
 
-namespace Ga\Rest\Actions;
+namespace Rest\Exponea\Actions;
 
 use Bitrix\Main\Localization\Loc;
-use Ga\Rest\Api\Security;
-use Ga\Rest\Exception\ApiException;
-use Ga\Rest\Tools\Http\ResponseCode;
-use Ga\Rest\Api\Interfaces\InterfaceRest;
+use Rest\Exponea\Api\Security;
+use Rest\Exponea\Exception\ApiException;
+use Rest\Exponea\Tools\Http\ResponseCode;
+use Rest\Exponea\Api\Interfaces\InterfaceRest;
 
 class Rest extends Security implements InterfaceRest
 {

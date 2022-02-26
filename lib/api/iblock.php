@@ -1,6 +1,6 @@
 <?php
 
-namespace Ga\Rest\Api;
+namespace Rest\Exponea\Api;
 
 abstract class Iblock
 {

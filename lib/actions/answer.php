@@ -1,9 +1,9 @@
 <?php
 
-namespace Ga\Rest\Actions;
+namespace Rest\Exponea\Actions;
 
 use Bitrix\Main\Web\Json;
-use Ga\Rest\Api\Answer as ApiAnswer;
+use Rest\Exponea\Api\Answer as ApiAnswer;
 
 class Answer extends ApiAnswer
 {

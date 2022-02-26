@@ -1,9 +1,9 @@
 <?php
 
-namespace Ga\Rest\ShortLinks;
+namespace Rest\Exponea\ShortLinks;
 
 use Bitrix\Main\Localization\Loc;
-use Ga\Rest\Tools\Http\Tools;
+use Rest\Exponea\Tools\Http\Tools;
 
 class Ui extends Source
 {

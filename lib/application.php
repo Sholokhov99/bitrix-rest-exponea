@@ -6,7 +6,7 @@
  * Email: sholokhov.daniil@gmail.com
  */
 
-namespace Ga\Rest;
+namespace Rest\Exponea;
 
 class Application
 {

@@ -1,5 +1,5 @@
 <?php
 
-use Ga\Rest;
+use Rest\Exponea;
 
-Rest\Application::autoload();
+Exponea\Application::autoload();

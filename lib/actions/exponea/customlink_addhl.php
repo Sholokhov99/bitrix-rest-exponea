@@ -1,17 +1,17 @@
 <?php
 
-namespace Ga\Rest\Actions\Exponea;
+namespace Rest\Exponea\Actions\Exponea;
 
 use Bitrix\Main\Localization\Loc;
-use Ga\Rest\Actions\Rest;
-use Ga\Rest\Api\Interfaces\InterfaceAction;
-use Ga\Rest\Iblock\Models;
-use Ga\Rest\Iblock\ShortLinks;
-use Ga\Rest\ShortLinks\Errors;
-use Ga\Rest\ShortLinks\Source as ShortLinkSource;
-use Ga\Rest\ShortLinks\Ui;
+use Rest\Exponea\Actions\Rest;
+use Rest\Exponea\Api\Interfaces\InterfaceAction;
+use Rest\Exponea\Iblock\Models;
+use Rest\Exponea\Iblock\ShortLinks;
+use Rest\Exponea\ShortLinks\Errors;
+use Rest\Exponea\ShortLinks\Source as ShortLinkSource;
+use Rest\Exponea\ShortLinks\Ui;
 use Bitrix\Main\Web\Json;
-use Ga\Rest\Tools\Http\Tools;
+use Rest\Exponea\Tools\Http\Tools;
 
 class CustomLink_AddHL extends Rest implements InterfaceAction
 {

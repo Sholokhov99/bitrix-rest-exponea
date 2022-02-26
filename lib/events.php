@@ -1,6 +1,6 @@
 <?php
 
-namespace Ga\Rest;
+namespace Rest\Exponea;
 
 use Bitrix\Main\EventManager;
 

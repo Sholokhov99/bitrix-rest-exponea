@@ -1,9 +1,9 @@
 <?php
 
-namespace Ga\Rest\Api;
+namespace Rest\Exponea\Api;
 
-use Ga\Rest\Actions\Answer;
-use Ga\Rest\Logger\Log;
+use Rest\Exponea\Actions\Answer;
+use Rest\Exponea\Logger\Log;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Application;
 use Bitrix\Main\Localization\Loc;

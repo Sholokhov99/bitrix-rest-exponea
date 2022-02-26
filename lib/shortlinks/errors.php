@@ -1,9 +1,9 @@
 <?php
 
-namespace Ga\Rest\ShortLinks;
+namespace Rest\Exponea\ShortLinks;
 
 use Bitrix\Main\Localization\Loc;
-use Ga\Rest\Actions\Answer;
+use Rest\Exponea\Actions\Answer;
 
 class Errors extends Answer
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Ga\Rest\Iblock;
+namespace Rest\Exponea\Iblock;
 
-use Ga\Rest\Api\Iblock;
-use Ga\Rest\Tools\Http\Tools;
-use Ga\Rest\ShortLinks\Source;
+use Rest\Exponea\Api\Iblock;
+use Rest\Exponea\Tools\Http\Tools;
+use Rest\Exponea\ShortLinks\Source;
 use Bitrix\Main\Type\DateTime;
 
 class ShortLinks extends Iblock

@@ -1,6 +1,6 @@
 <?php
 
-namespace Ga\Rest\Tools;
+namespace Rest\Exponea\Tools;
 
 class Convert
 {

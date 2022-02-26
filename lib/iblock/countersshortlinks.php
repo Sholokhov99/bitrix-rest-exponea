@@ -1,8 +1,8 @@
 <?php
 
-namespace Ga\Rest\Iblock;
+namespace Rest\Exponea\Iblock;
 
-use Ga\Rest\Api\Iblock;
+use Rest\Exponea\Api\Iblock;
 
 class CountersShortLinks extends Iblock
 {
