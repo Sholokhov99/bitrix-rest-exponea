@@ -19,8 +19,17 @@ class rest_exponea extends CModule
     public $MODULE_GROUP_RIGHTS = "Y";
     public $PARTNER_NAME = "Sholokhov";
     public $PARTNER_URI = "https://github.com/Sholokhov99/bitrix-rest-exponea";
+    /**
+     * Id типа инфоблока, который необходимо установить
+     */
     private const IBLOCK_TYPE = "rest_exponea";
+    /**
+     * Символьные кода инфоблоков, которые необходимо установить
+     */
     private const IBLOCK_CODE = ["short_link", "counts_short_links"];
+    /**
+     * Файлы, которые необходимо установить
+     */
     private const FILES_INSTALL = [
         [
             "form" => '/admin',
@@ -31,9 +40,28 @@ class rest_exponea extends CModule
             'to' => '/bitrix/js',
         ]
     ];
-
+    /**
+     * Список групп пользователей, которые использует модуль
+     */
+    private const GROUP_LIST = [
+        "shortlink" => "Редактор пользовательских ссылок",
+        "admin_shortlinks" => "Администратор коротких ссылок",
+        "rest_api" => "rest_api"
+    ];
+    /**
+     * ID созданных групп при установке модуля
+     * @var array
+     */
+    private $idGroups = [];
+    /**
+     * Ошибки при установке модуля
+     * @var array
+     */
     private $errors;
 
+    /**
+     * @return void
+     */
     public function rest_exponea()
     {
         $arModuleVersion = array();
@@ -52,13 +80,17 @@ class rest_exponea extends CModule
         $this->MODULE_DESCRIPTION = Loc::getMessage("REST_EXPONEA_MODULE_DESCRIPTION");
     }
 
-    public function DoInstall()
+    /**
+     * @return void
+     */
+    public function DoInstall(): void
     {
         global $APPLICATION;
 
         if ($this->InstallIblock()) {
             $this->InstallDB();
             $this->InstallFiles();
+            $this->InstallUserGroups();
         }
 
         if ($this->errorEmpty() === false) {
@@ -67,7 +99,7 @@ class rest_exponea extends CModule
 
         $APPLICATION->IncludeAdminFile(
             Loc::getMessage("REST_EXPONEA_MODULE_INSTALL") . $this->MODULE_ID,
-            $_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/step1.php"
+            __DIR__ . "/step1.php"
         );
     }
 
@@ -76,16 +108,15 @@ class rest_exponea extends CModule
         global $APPLICATION, $step;
         $step = IntVal($step);
 
-        $this->UnInstallDB();
-        $this->UnInstallFiles();
-        $this->UnInstallEvents();
+        $this->unInstallDB();
+        $this->unInstallFiles();
+        $this->unInstallUserGroups();
+        $this->unInstallUblock();
         UnRegisterModule($this->MODULE_ID);
-
-        $this->unRegisterEvents();
 
         $APPLICATION->IncludeAdminFile(
             Loc::getMessage("REST_EXPONEA_MODELE_DELETE") . $this->MODULE_ID,
-            $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/" . $this->MODULE_ID . "/install/unstep1.php"
+            __DIR__ . "/unstep1.php"
         );
     }
 
@@ -158,7 +189,7 @@ class rest_exponea extends CModule
     /**
      * @return bool
      */
-    public function InstallDB(): bool
+    public function installDB(): bool
     {
         $this->registerEvents();
         ModuleManager::registerModule($this->MODULE_ID);
@@ -166,9 +197,18 @@ class rest_exponea extends CModule
     }
 
     /**
+     * @return void
+     */
+    public function unInstallDB(): void
+    {
+        $this->unRegisterEvents();
+        \COption::RemoveOption($this->MODULE_ID);
+    }
+
+    /**
      * @return bool
      */
-    public function InstallFiles(): bool
+    public function installFiles(): bool
     {
         if ($_ENV["COMPUTERNAME"] != 'BX') {
             foreach (self::FILES_INSTALL as $collection) {
@@ -186,7 +226,7 @@ class rest_exponea extends CModule
     /**
      * @return bool
      */
-    public function UninstallFiles(): bool
+    public function uninstallFiles(): bool
     {
         if ($_ENV["COMPUTERNAME"] != 'BX') {
             foreach (self::FILES_INSTALL as $collection) {
@@ -203,7 +243,7 @@ class rest_exponea extends CModule
     /**
      * @return bool
      */
-    public function InstallIblock(): bool
+    public function installIblock(): bool
     {
         global $APPLICATION;
 
@@ -250,12 +290,71 @@ class rest_exponea extends CModule
     }
 
     /**
+     * @return void
+     */
+    public function unInstallUblock(): void
+    {
+        $dbIblockType = \CIBlockType::Delete(self::IBLOCK_TYPE);
+    }
+
+    /**
+     * Создание групп пользователей
+     * @return bool
+     */
+    public function installUserGroups(): bool
+    {
+        $dbGroup = new \CGroup();
+        $groupList = [];
+        $fields = ["ACTIVE" => "Y", "C_SORT" => 100];
+
+        $dBGroupList = \CGroup::GetList($by = "c_sort", $order = "asc", ["STRING_ID" => array_keys(self::GROUP_LIST)]);
+        while ($group = $dBGroupList->Fetch()) {
+            $groupList[] = $group["STRING_ID"];
+        }
+
+        foreach (self::GROUP_LIST as $stringId => $name) {
+            if (in_array($stringId, $groupList) === false) {
+                $fields["STRING_ID"] = $stringId;
+                $fields["NAME"] = $name;
+                $idGroup = $dbGroup->Add($fields);
+
+                if (strlen($dbGroup->LAST_ERROR) > 0) {
+                    foreach ($this->idGroups as $key => $id) {
+                        \CGroup::Delete($id);
+                        unset($this->idGroups[$key]);
+                    }
+                    $this->addError(Loc::getMessage("REST_EXPONEA_MODELE_INSTALL_GROUP_ERROR"));
+                    return false;
+                } else {
+                    $this->idGroups[] = $idGroup;
+                }
+            }
+        }
+
+        return $this->errorEmpty();
+    }
+
+    /**
+     * Удаление созданных групп
+     * @return bool
+     */
+    public function unInstallUserGroups(): bool
+    {
+        $dBGroupList = \CGroup::GetList($by = "c_sort", $order = "asc", ["STRING_ID" => array_keys(self::GROUP_LIST)]);
+        while ($group = $dBGroupList->Fetch()) {
+            \CGroup::Delete($group["ID"]);
+        }
+        return true;
+    }
+
+    /**
      * Получение пути до install модуля в ядре
      * @return string
      */
     public function getPathModule(): string
     {
-        return $_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/{$this->MODULE_ID}/install";
+        #return $_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/{$this->MODULE_ID}/install";
+        return __DIR__ . "/install";
     }
 
     function GetModuleTasks()
@@ -443,7 +542,7 @@ class rest_exponea extends CModule
 
                 foreach ($collectionPropertys as $data) {
                     $data["IBLOCK_ID"] = $idIblock;
-                    if($dbIblockProperty->Add($data) <= 0) {
+                    if ($dbIblockProperty->Add($data) <= 0) {
                         return false;
                     }
                 }
@@ -465,6 +564,7 @@ class rest_exponea extends CModule
     private function getDataIblockCreate(string $code): array
     {
         $access = ["2" => "R"];
+        # Прописать права на Iblock id
         $data = [
             "IBLOCK" => [
                 "ACTIVE" => "Y",
@@ -544,6 +644,7 @@ class rest_exponea extends CModule
     }
 
     /**
+     * Получение текущего ID сайта
      * @return array
      */
     private function getSiteId(): array

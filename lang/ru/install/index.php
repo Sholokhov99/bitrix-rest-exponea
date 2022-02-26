@@ -8,3 +8,4 @@ $MESS["REST_EXPONEA_MODELE_INSTALL_IBLOCK_ERROR"] = "Ошибка при соз�
 $MESS["REST_EXPONEA_MODELE_INSTALL_IBLOCK_TYPE"] = "Тип инфоблока с кодом '#CODE#' уже существует.";
 $MESS["REST_EXPONEA_MODELE_INSTALL_IBLOCK_TYPE_ERROR"] = "При создании типа ИБ возникла ошибка.";
 $MESS["REST_EXPONEA_MODELE_INSTALL_IBLOCK_ERROR_MODULE"] = "Не удалось подключить модуль iblock.";
+$MESS["REST_EXPONEA_MODELE_INSTALL_GROUP_ERROR"] = "При создании группы пользователя возникла ошибка.";
