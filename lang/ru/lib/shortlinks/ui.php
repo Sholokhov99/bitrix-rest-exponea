@@ -1,6 +1,6 @@
 <?
 $MESS["ERROR_ACCESS"] = "Access error";
-$MESS["ERROR_ADD_SHORT_LINK"] = "Во время создания возникла ошибка444";
+$MESS["ERROR_ADD_SHORT_LINK"] = "Во время создания возникла ошибка3";
 $MESS["ERROR_DUPLICATE_SHORT_LINK"] = "Короткий URL уже существует";
 $MESS["ERROR_UPDATE_SHORT_LINK"] = "Во время обновления возникла ошибка";
 $MESS["ERROR_DELETE_SHORT_LINK"] = "Во время удаления возникла ошибка";

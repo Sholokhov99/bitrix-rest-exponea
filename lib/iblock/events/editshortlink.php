@@ -30,7 +30,7 @@ class EditShortLink
         }
 
         $lenght = strlen($code);
-        if ($lenght && static::$shortLinks->getIblockId() == $iblockId && $active == "Y") {
+        if ($lenght && in_array($iblockId, static::$shortLinks->getIblockId()) && $active == "Y") {
             static::$countersShortLinks->updateCounterLinks($lenght, $increase);
         }
     }
