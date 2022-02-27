@@ -1,5 +1,5 @@
 <?php
-namespace Ga\Rest\Tools\Http;
+namespace Rest\Exponea\Tools\Http;
 
 class ResponseCode
 {

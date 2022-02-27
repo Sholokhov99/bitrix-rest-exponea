@@ -1,9 +1,9 @@
 <?php
 
-namespace Ga\Rest\Iblock\Events;
+namespace Rest\Exponea\Iblock\Events;
 
-use Ga\Rest\Iblock\ShortLinks;
-use Ga\Rest\Iblock\CountersShortLinks;
+use Rest\Exponea\Iblock\ShortLinks;
+use Rest\Exponea\Iblock\CountersShortLinks;
 
 class EditShortLink
 {
@@ -30,7 +30,7 @@ class EditShortLink
         }
 
         $lenght = strlen($code);
-        if ($lenght && static::$shortLinks->getIblockId() == $iblockId && $active == "Y") {
+        if ($lenght && in_array($iblockId, static::$shortLinks->getIblockId()) && $active == "Y") {
             static::$countersShortLinks->updateCounterLinks($lenght, $increase);
         }
     }

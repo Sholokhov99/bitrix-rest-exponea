@@ -1,6 +1,6 @@
 <?php
 
-namespace Ga\Rest\Api\Interfaces;
+namespace Rest\Exponea\Api\Interfaces;
 
 interface InterfaceAction
 {

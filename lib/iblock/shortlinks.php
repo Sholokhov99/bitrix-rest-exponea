@@ -1,10 +1,10 @@
 <?php
 
-namespace Ga\Rest\Iblock;
+namespace Rest\Exponea\Iblock;
 
-use Ga\Rest\Api\Iblock;
-use Ga\Rest\Tools\Http\Tools;
-use Ga\Rest\ShortLinks\Source;
+use Rest\Exponea\Api\Iblock;
+use Rest\Exponea\Tools\Http\Tools;
+use Rest\Exponea\ShortLinks\Source;
 use Bitrix\Main\Type\DateTime;
 
 class ShortLinks extends Iblock
@@ -35,10 +35,11 @@ class ShortLinks extends Iblock
         }
         global $USER;
 
+        $iblockId = $this->getIblockId();
         $dbElements = \CIBlockElement::GetList(
             array(),
             array(
-                "IBLOCK_ID" => $this->getIblockId(),
+                "IBLOCK_ID" => reset($iblockId),
                 "NAME" => $this->getTransformUrl($url),
                 "PROPERTY_" . self::PROPERTY_GET_PARAMS => $this->getTransformUrl($params),
                 "CREATED_BY" => $USER->GetID(),
@@ -98,9 +99,10 @@ class ShortLinks extends Iblock
             $el = new \CIBlockElement();
             $updateStatus = $el->Update($id, array("NAME" => $this->getTransformUrl($url)));
             if ($updateStatus) {
+                $iblockId = $this->getIblockId();
                 \CIBlockElement::SetPropertyValuesEx(
                     $id,
-                    $this->getIblockId(),
+                    reset($iblockId),
                     array(
                         self::PROPERTY_GET_PARAMS => $this->getTransformUrl($params)
                     ),
@@ -123,8 +125,9 @@ class ShortLinks extends Iblock
     {
         if ($this->isModuleReady() && $this->iblockIdEmpty() === false) {
             global $USER;
+            $iblockId = $this->getIblockId();
             $fields = array(
-                "IBLOCK_ID" => $this->getIblockId(),
+                "IBLOCK_ID" => reset($iblockId),
                 "NAME" => $this->getTransformUrl($url),
                 "ACTIVE" => "Y",
                 "IBLOCK_SECTION_ID" => $USER->GetID(),
@@ -153,10 +156,11 @@ class ShortLinks extends Iblock
             return false;
         }
 
+        $iblockId = $this->getIblockId();
         $dbElements = \CIBlockElement::GetList(
             array(),
             array(
-                "IBLOCK_ID" => $this->getIblockId(),
+                "IBLOCK_ID" => reset($iblockId),
                 "CODE" => $code,
             ),
             array()
@@ -173,10 +177,11 @@ class ShortLinks extends Iblock
     {
         $url = "";
         if ($this->isModuleReady() && strlen($code) && $this->iblockIdEmpty() === false) {
+            $iblockId = $this->getIblockId();
             $dbElements = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => $this->getIblockId(),
+                    "IBLOCK_ID" => reset($iblockId),
                     "ACTIVE" => "Y",
                     "CODE" => $code
                 ),
@@ -206,10 +211,11 @@ class ShortLinks extends Iblock
     {
         $idlist = array();
         if ($this->isModuleReady() && $this->iblockIdEmpty() === false) {
+            $iblockId = $this->getIblockId();
             $dbElement = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => $this->getIblockId(),
+                    "IBLOCK_ID" => reset($iblockId),
                     "!ACTIVE_DATE" => "Y",
                     false,
                     false,
@@ -233,10 +239,11 @@ class ShortLinks extends Iblock
     {
         $arrUrl = array();
         if ($this->isModuleReady() && $this->iblockIdEmpty() === false && $id) {
+            $iblockId = $this->getIblockId();
             $dbElement = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => $this->getIblockId(),
+                    "IBLOCK_ID" => reset($iblockId),
                     "ID" => $id,
                 ),
                 false,
@@ -259,10 +266,11 @@ class ShortLinks extends Iblock
     {
         $url = "";
         if ($this->isModuleReady() && $this->iblockIdEmpty() === false && strlen($code)) {
+            $iblockId = $this->getIblockId();
             $dbElements = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => $this->getIblockId(),
+                    "IBLOCK_ID" => reset($iblockId),
                     "ACTIVE" => "Y",
                     "CODE" => $code
                 ),
@@ -289,10 +297,11 @@ class ShortLinks extends Iblock
     {
         $idShortLink = 0;
         if ($this->isModuleReady() && $this->iblockIdEmpty() === false && strlen($url)) {
+            $iblockId = $this->getIblockId();
             $dbElements = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => $this->getIblockId(),
+                    "IBLOCK_ID" => reset($iblockId),
                     "ACTIVE" => "Y",
                     "NAME" => $this->getTransformUrl($url),
                     "PROPERTY_" . self::PROPERTY_GET_PARAMS => $this->getTransformUrl($getParams),
@@ -351,9 +360,10 @@ class ShortLinks extends Iblock
             } else {
                 $count = 0;
             }
+            $iblockId = $this->getIblockId();
             \CIBlockElement::SetPropertyValuesEx(
                 $id,
-                $this->getIblockId(),
+                reset($iblockId),
                 array(
                     self::PROPERTY_COUNT_VIEWS => $count + 1
                 )

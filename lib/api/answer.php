@@ -1,10 +1,10 @@
 <?php
 
-namespace Ga\Rest\Api;
+namespace Rest\Exponea\Api;
 
 use Bitrix\Main\Web\Json;
-use Ga\Rest\Tools\Convert;
-use Ga\Rest\Api\Interfaces\InterfaceAnswer;
+use Rest\Exponea\Tools\Convert;
+use Rest\Exponea\Api\Interfaces\InterfaceAnswer;
 
 abstract class Answer implements InterfaceAnswer
 {

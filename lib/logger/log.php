@@ -1,8 +1,8 @@
 <?php
 
-namespace Ga\Rest\Logger;
+namespace Rest\Exponea\Logger;
 
-use Ga\Rest\Application;
+use Rest\Exponea\Application;
 
 class Log
 {

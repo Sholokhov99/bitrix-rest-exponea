@@ -1,9 +1,9 @@
 <?php
 
-namespace Ga\Rest\ShortLinks;
+namespace Rest\Exponea\ShortLinks;
 
-use Ga\Rest\Iblock\CountersShortLinks;
-use Ga\Rest\Iblock\ShortLinks;
+use Rest\Exponea\Iblock\CountersShortLinks;
+use Rest\Exponea\Iblock\ShortLinks;
 use Bitrix\Main\Localization\Loc;
 
 class Source extends Errors

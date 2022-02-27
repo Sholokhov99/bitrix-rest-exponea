@@ -6,11 +6,11 @@
  * Email: sholokhov.daniil@gmail.com
  */
 
-namespace Ga\Rest;
+namespace Rest\Exponea;
 
 class Application
 {
-    public const MODULE_ID = "ga.rest";
+    public const MODULE_ID = "rest.exponea";
 
     /**
      * Загрузка необходимых классов

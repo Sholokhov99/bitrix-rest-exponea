@@ -1,5 +1,6 @@
 <?php
 
-use Ga\Rest;
+use Rest\Exponea;
+use Bitrix\Main\EventManager;
 
-Rest\Application::autoload();
+Exponea\Application::autoload();

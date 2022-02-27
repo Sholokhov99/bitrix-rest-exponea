@@ -1,17 +1,18 @@
 <?php
 
-namespace Ga\Rest\Actions\Exponea;
+namespace Rest\Exponea\Actions\Exponea;
 
 use Bitrix\Main\Localization\Loc;
-use Ga\Rest\Actions\Rest;
-use Ga\Rest\Api\Interfaces\InterfaceAction;
-use Ga\Rest\Iblock\Models;
-use Ga\Rest\Iblock\ShortLinks;
-use Ga\Rest\ShortLinks\Errors;
-use Ga\Rest\ShortLinks\Source as ShortLinkSource;
-use Ga\Rest\ShortLinks\Ui;
+use Rest\Exponea\Actions\Rest;
+use Rest\Exponea\Api\Interfaces\InterfaceAction;
+use Rest\Exponea\Application;
+use Rest\Exponea\Iblock\Models;
+use Rest\Exponea\Iblock\ShortLinks;
+use Rest\Exponea\ShortLinks\Errors;
+use Rest\Exponea\ShortLinks\Source as ShortLinkSource;
+use Rest\Exponea\ShortLinks\Ui;
 use Bitrix\Main\Web\Json;
-use Ga\Rest\Tools\Http\Tools;
+use Rest\Exponea\Tools\Http\Tools;
 
 class CustomLink_AddHL extends Rest implements InterfaceAction
 {
@@ -340,12 +341,33 @@ class CustomLink_AddHL extends Rest implements InterfaceAction
      */
     protected function createProductLink(): void
     {
-        $models = new Models();
-        $arrLongUrl = $models->getDetailUrl(intval($this->collectionData["ID"]));
+        $arrLongUrl = [];
 
-        $arrLongUrl[self::PROPERTY_URL_CODE] = Tools::getUrlWeb(
-                self::CATALOG_DIR
-            ) . $arrLongUrl[self::PROPERTY_URL_CODE];
+        $events = \GetModuleEvents(Application::MODULE_ID, "OnBeforeAddNewProductShortLink");
+        $fields = ["ID" => intval($this->collectionData["ID"])];
+
+        while ($event = $events->Fetch()) {
+            $result = \ExecuteModuleEventEx($event, $fields);
+            if ($result === false) {
+                static::$answer->setError("Ошибка при получении товара");
+                break;
+            } elseif (is_array($result)) {
+                if(is_numeric($result["ID"]) && is_string($result["URL"])) {
+                    $arrLongUrl["ID"] = intval($result["ID"]);
+                    $arrLongUrl["URL"] = $result["URL"];
+                }
+            }
+        }
+
+        if(count($arrLongUrl) === 0) {
+            $models = new Models();
+            $arrLongUrl = $models->getDetailUrl(intval($this->collectionData["ID"]));
+
+            $arrLongUrl[self::PROPERTY_URL_CODE] = Tools::getUrlWeb(
+                    self::CATALOG_DIR
+                ) . $arrLongUrl[self::PROPERTY_URL_CODE];
+
+        }
 
         $this->collectionLongUrl = $arrLongUrl;
     }
