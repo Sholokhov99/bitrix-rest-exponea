@@ -4,7 +4,9 @@ namespace Rest\Exponea\Actions;
 
 use Bitrix\Main\Localization\Loc;
 use Rest\Exponea\Api\Security;
+use Rest\Exponea\Application;
 use Rest\Exponea\Exception\ApiException;
+use Rest\Exponea\Options;
 use Rest\Exponea\Tools\Http\ResponseCode;
 use Rest\Exponea\Api\Interfaces\InterfaceRest;
 
@@ -55,7 +57,7 @@ class Rest extends Security implements InterfaceRest
     public function route(): void
     {
         $this->setOut((string)$this->request->getPost("out"));
-        $namespace = __NAMESPACE__ . '\\' . $this->getClassNameAction(). '\\' . $this->getClassNameAction();
+        $namespace = __NAMESPACE__ . '\\' . $this->getNamespaceAction(). '\\' . $this->getClassNameAction();
 
         if (class_exists($namespace) && method_exists($namespace, $this->nameFunctionStartAction)) {
             $this->action = new $namespace;
@@ -95,7 +97,9 @@ class Rest extends Security implements InterfaceRest
      */
     protected function checkToken(): bool
     {
-        if($this->request !== null && $this->request->getPost("token") === $this->token) {
+        $token = strlen($this->token) ? $this->token : \COption::GetOptionString(Application::MODULE_ID, Options::EXPONEA_TOKEN);
+
+        if($this->request !== null && $this->request->getPost("token") === $token) {
             return true;
         } else {
             static::$answer->SetError(Loc::getMessage("ERROR_INVALID_TOKEN"));

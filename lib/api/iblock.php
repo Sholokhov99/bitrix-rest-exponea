@@ -2,6 +2,9 @@
 
 namespace Rest\Exponea\Api;
 
+use Rest\Exponea\Application;
+use Rest\Exponea\Options;
+
 abstract class Iblock
 {
     /**
@@ -41,9 +44,9 @@ abstract class Iblock
     /**
      * @return int
      */
-    public function getIblockId(): int
+    public function getIblockId(): array
     {
-        return intval($this->iblockId);
+        return is_array($this->iblockId) ? $this->iblockId : array();
     }
 
     /**
@@ -59,7 +62,7 @@ abstract class Iblock
      */
     protected function iblockIdEmpty(): bool
     {
-        return $this->getIblockId() === 0;
+        return count($this->getIblockId()) === 0;
     }
 
     /**
@@ -68,21 +71,34 @@ abstract class Iblock
      */
     protected function setIblockId(): void
     {
-        $sort = [
-            "sort" => "asc"
-        ];
-        $filter = [
-            "ACTIVE" => "Y",
-            "CODE" => $this->getIblockCode()
-        ];
+        $idIblockFromOption = \COption::GetOptionString(Application::MODULE_ID, "IBLOCK_ID_".$this->iblockCode);
 
-        if(strlen($filter["CODE"])) {
-            $dbIblock = \CIBlock::GetList($sort,$filter);
-            $iblock = $dbIblock->Fetch();
-
-            $this->iblockId = intval($iblock["ID"]);
+        if($this->iblockCode === Options::EXPONEA_WEBHOOK_SHORTLINK_PRODUCT){
+            $this->iblockId = unserialize($idIblockFromOption);
         } else {
-            $this->iblockId = 0;
+            $idIblockFromOption = intval($idIblockFromOption);
+            if($idIblockFromOption) {
+                $this->iblockId = array($idIblockFromOption);
+            } else {
+                $sort = [
+                    "sort" => "asc"
+                ];
+                $filter = [
+                    "ACTIVE" => "Y",
+                    "CODE" => $this->getIblockCode()
+                ];
+
+                if (strlen($filter["CODE"])) {
+                    $dbIblock = \CIBlock::GetList($sort, $filter);
+                    if($iblock = $dbIblock->Fetch()) {
+                        $this->iblockId = array(intval($iblock["ID"]));
+                    } else {
+                        $this->iblockId = array();
+                    }
+                } else {
+                    $this->iblockId = array();
+                }
+            }
         }
     }
 }

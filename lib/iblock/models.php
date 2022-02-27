@@ -3,10 +3,14 @@
 namespace Rest\Exponea\Iblock;
 
 use Rest\Exponea\Api\Iblock;
+use Rest\Exponea\Options;
 
 class Models extends Iblock
 {
-    protected $iblockCode = "";
+    /**
+     * @var string
+     */
+    protected $iblockCode = Options::EXPONEA_WEBHOOK_SHORTLINK_PRODUCT;
 
     /**
      * @param int $idElement
@@ -40,5 +44,3 @@ class Models extends Iblock
         return $result;
     }
 }
-
-?>

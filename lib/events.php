@@ -9,7 +9,8 @@ class Events
     /**
      *  Пространство имен, для хранения событий модуля IBLOCK
      */
-    private const NAMESPACE_IBLOCK = __NAMESPACE__ . "\\Iblock\\Events";
+    private const NAMESPACE_IBLOCK = "\\". __NAMESPACE__ . "\\Iblock\\Events";
+    private const NAMESPACE_REST_EXPONEA = "\\". __NAMESPACE__ . "\\Actions\\Exponea\\Events";
     /**
      * @var EventManager
      */
@@ -22,15 +23,18 @@ class Events
      */
     public static function autoload(): void
     {
-        static::$eventManager = EventManager::getInstance();
-        if (is_null(static::$eventManager) === false) {
-            array_merge(static::$eventsCollection, static::iblock());
+        if(is_null(static::$eventManager)) {
+            static::$eventManager = EventManager::getInstance();
+            if (is_null(static::$eventManager) === false) {
+                static::$eventsCollection = array_merge(static::$eventsCollection, static::iblock());
+                static::$eventsCollection = array_merge(static::$eventsCollection, static::rest());
 
-            static::addEvents();
+                static::addEvents();
+            }
+
+            static::$eventsCollection = array();
         }
-
-        static::$eventsCollection = array();
-        static::$eventManager = null;
+        #static::$eventManager = null;
     }
 
     private static function getNamespace(string $module): string
@@ -38,6 +42,9 @@ class Events
         switch (strtolower($module)) {
             case "iblock":
                 return self::NAMESPACE_IBLOCK;
+                break;
+            case Application::MODULE_ID:
+                return self::NAMESPACE_REST_EXPONEA;
                 break;
             default:
                 return "";
@@ -70,7 +77,7 @@ class Events
 
     /**
      * События с модулем iblock
-     * @return void
+     * @return array
      */
     private static function iblock(): array
     {
@@ -85,6 +92,22 @@ class Events
                     "event" => "OnAfterIBlockElementAdd",
                     "namespace" => "EditShortLinks",
                     "function" => "addShortLink"
+                ],
+            ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private static function rest(): array
+    {
+        return [
+            Application::MODULE_ID => [
+                [
+                    "event" => "OnBeforeAddNewProductShortLink",
+                    "namespace" => "ShortLinks",
+                    "function" => "OnBeforeAddNewProductShortLink"
                 ],
             ]
         ];
