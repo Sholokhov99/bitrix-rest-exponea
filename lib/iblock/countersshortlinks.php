@@ -10,8 +10,6 @@ class CountersShortLinks extends Iblock
      * @var string
      */
     protected $iblockCode = "counts_short_links";
-
-   # public const IBLOCK_ID = 2;
     private const PROPERTY_COUNT_SHORT_LINK = "COUNT_SHORT_LINK";
 
     /**
@@ -21,10 +19,12 @@ class CountersShortLinks extends Iblock
     public function getCountLinksList(): array
     {
         $counterLinks = array();
-        if ($this->iblockIdEmpty() === false && $this->isModuleReady()) {
+        $iblockId = $this->getIblockIdByArray();
+
+        if ($this->iblockIdEmpty() === false && $this->isModuleReady() && is_null($iblockId) === false) {
             $dbElement = \CIBlockElement::GetList(
                 array("NAME" => "ASC"),
-                array('IBLOCK_ID' => $this->getIblockId()),
+                array('IBLOCK_ID' => $iblockId),
                 false,
                 false,
                 array("ID", "NAME", "PROPERTY_" . self::PROPERTY_COUNT_SHORT_LINK)
@@ -55,11 +55,12 @@ class CountersShortLinks extends Iblock
      */
     public function updateCounterLinks(int $length, bool $increase = true): void
     {
-        if ($this->isModuleReady() && $this->iblockIdEmpty() === false) {
+        $iblockId = $this->getIblockIdByArray();
+        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && is_null($iblockId) === false) {
             $dbElement = \CIBlockElement::GetList(
                 array(),
                 array(
-                    'IBLOCK_ID' => $this->getIblockId(),
+                    'IBLOCK_ID' => $iblockId,
                     "NAME" => $length
                 ),
                 false,
@@ -84,7 +85,7 @@ class CountersShortLinks extends Iblock
 
                 \CIBlockElement::SetPropertyValuesEx(
                     $element["ID"],
-                    $this->getIblockId(),
+                    $iblockId,
                     array(
                         self::PROPERTY_COUNT_SHORT_LINK => $count
                     )
@@ -94,7 +95,7 @@ class CountersShortLinks extends Iblock
                 $el->Add(
                     array(
                         "ACTIVE" => "Y",
-                        "IBLOCK_ID" => $this->getIblockId(),
+                        "IBLOCK_ID" => $iblockId,
                         "NAME" => $length,
                         "PROPERTY_VALUES" => array(
                             self::PROPERTY_COUNT_SHORT_LINK => ($increase) ? 1 : 0

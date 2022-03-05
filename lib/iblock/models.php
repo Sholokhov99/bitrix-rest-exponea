@@ -13,6 +13,7 @@ class Models extends Iblock
     protected $iblockCode = Options::EXPONEA_WEBHOOK_SHORTLINK_PRODUCT;
 
     /**
+     * Получение url продукта на основании настроек ИБ
      * @param int $idElement
      * @return array
      */

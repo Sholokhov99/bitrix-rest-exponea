@@ -85,12 +85,12 @@ class Events
             "iblock" => [
                 [
                     "event" => "OnBeforeIBlockElementDelete",
-                    "namespace" => "EditShortLinks",
+                    "namespace" => "EditShortLink",
                     "function" => "deleteLink"
                 ],
                 [
                     "event" => "OnAfterIBlockElementAdd",
-                    "namespace" => "EditShortLinks",
+                    "namespace" => "EditShortLink",
                     "function" => "addShortLink"
                 ],
             ]

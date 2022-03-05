@@ -42,11 +42,45 @@ abstract class Iblock
     }
 
     /**
-     * @return int
+     * @return array
      */
     public function getIblockId(): array
     {
-        return is_array($this->iblockId) ? $this->iblockId : array();
+        if (is_array($this->iblockId) === false) {
+            $this->iblockId = [];
+        }
+
+        return $this->iblockId;
+    }
+
+    /**
+     * Получение первого значения iblockId
+     * @return int|null
+     */
+    public function getIblockIdByArray(): ?int
+    {
+        $collectionIblockId = $this->getIblockId();
+        $iblockId = reset($collectionIblockId);
+        if(count($collectionIblockId) && is_numeric($iblockId) && $iblockId > 0) {
+            return $iblockId;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Удаление iblockId по ключу
+     * @param int $key
+     * @return bool
+     */
+    protected function deleteIblockById(int $key): bool
+    {
+        if(key_exists($key, $this->getIblockId())) {
+            unset($this->iblockId[$key]);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

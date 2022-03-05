@@ -7,8 +7,8 @@ class ShortLinks
     public static function OnBeforeAddNewProductShortLink($fields)
     {
         $result = [
-            "ID" => "HAHA",
-            "URL" => "SDGFG",
+            "ID" => "0",
+            "URL" => "https://test.ru",
         ];
 
         return $result;

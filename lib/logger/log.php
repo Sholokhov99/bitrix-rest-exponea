@@ -51,7 +51,7 @@ class Log
      * @param mixed $data
      * @return void
      */
-    public function addDataLog(mixed $data): void
+    public function addDataLog($data): void
     {
         $this->dataLog[] = $data;
     }
@@ -110,7 +110,7 @@ class Log
      * Путь до лог записи
      * @return string|null
      */
-    protected function getPathLogs(): ?string
+    protected function getPathLogs(): string
     {
         if (defined(Application::class."::MODULE_ID")) {
             return $_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . Application::MODULE_ID . "/logs/";
@@ -118,10 +118,10 @@ class Log
             $path = __DIR__ . "/log/";
             if (file_exists($path) === false) {
                 if (mkdir($path) === false) {
-                    return null;
+                    return __DIR__;
                 }
             }
-            return __DIR__ . "/log/";
+            return __DIR__ . $path;
         }
     }
 }

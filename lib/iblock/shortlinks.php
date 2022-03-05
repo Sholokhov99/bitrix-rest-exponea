@@ -30,16 +30,17 @@ class ShortLinks extends Iblock
      */
     public function isDuplicationUrl(string $url, string $params): bool
     {
-        if ($this->isModuleReady() === false || $this->iblockIdEmpty()) {
+        $iblockId = $this->getIblockIdByArray();
+
+        if ($this->isModuleReady() === false || $this->iblockIdEmpty() || is_null($iblockId)) {
             return false;
         }
         global $USER;
 
-        $iblockId = $this->getIblockId();
         $dbElements = \CIBlockElement::GetList(
             array(),
             array(
-                "IBLOCK_ID" => reset($iblockId),
+                "IBLOCK_ID" => $iblockId,
                 "NAME" => $this->getTransformUrl($url),
                 "PROPERTY_" . self::PROPERTY_GET_PARAMS => $this->getTransformUrl($params),
                 "CREATED_BY" => $USER->GetID(),
@@ -71,15 +72,13 @@ class ShortLinks extends Iblock
     }
 
     /**
+     * Удаление ссылки
      * @param int $id
      * @return bool
      */
     public function delete(int $id): bool
     {
-        $source = new Source();
-
-        if (($this->isElementByUser($id) || $source->isAdmin()) && $this->isModuleReady()) {
-            #Удаление ссылки
+        if ($this->checkAccess($id) && $this->isModuleReady()) {
             return \CIBlockElement::Delete($id);
         } else {
             return false;
@@ -94,15 +93,14 @@ class ShortLinks extends Iblock
      */
     public function update(int $id, string $url, string $params): bool
     {
-        $source = new Source();
-        if ($this->isElementByUser($id) || $source->isAdmin() && $this->isModuleReady() && $this->iblockIdEmpty() === false) {
+        $iblockId = $this->getIblockIdByArray();
+        if ($this->checkAccess($id) && $this->isModuleReady() && $this->iblockIdEmpty() === false && is_null($iblockId) === false) {
             $el = new \CIBlockElement();
             $updateStatus = $el->Update($id, array("NAME" => $this->getTransformUrl($url)));
             if ($updateStatus) {
-                $iblockId = $this->getIblockId();
                 \CIBlockElement::SetPropertyValuesEx(
                     $id,
-                    reset($iblockId),
+                    $iblockId,
                     array(
                         self::PROPERTY_GET_PARAMS => $this->getTransformUrl($params)
                     ),
@@ -123,11 +121,11 @@ class ShortLinks extends Iblock
      */
     public function add(string $url, string $shortLink, int $daysLive = 0, string $params = ""): int
     {
-        if ($this->isModuleReady() && $this->iblockIdEmpty() === false) {
+        $iblockId = $this->getIblockIdByArray();
+        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && is_null($iblockId) === false) {
             global $USER;
-            $iblockId = $this->getIblockId();
             $fields = array(
-                "IBLOCK_ID" => reset($iblockId),
+                "IBLOCK_ID" => $iblockId,
                 "NAME" => $this->getTransformUrl($url),
                 "ACTIVE" => "Y",
                 "IBLOCK_SECTION_ID" => $USER->GetID(),
@@ -152,15 +150,15 @@ class ShortLinks extends Iblock
      */
     public function isDuplicationShortLink(string $code): bool
     {
-        if ($this->isModuleReady() === false) {
+        $iblockId = $this->getIblockId();
+        if ($this->isModuleReady() === false || is_null($iblockId)) {
             return false;
         }
 
-        $iblockId = $this->getIblockId();
         $dbElements = \CIBlockElement::GetList(
             array(),
             array(
-                "IBLOCK_ID" => reset($iblockId),
+                "IBLOCK_ID" => $iblockId,
                 "CODE" => $code,
             ),
             array()
@@ -176,12 +174,12 @@ class ShortLinks extends Iblock
     public function getUrl(string $code): string
     {
         $url = "";
-        if ($this->isModuleReady() && strlen($code) && $this->iblockIdEmpty() === false) {
-            $iblockId = $this->getIblockId();
+        $iblockId = $this->getIblockIdByArray();
+        if ($this->isModuleReady() && strlen($code) && $this->iblockIdEmpty() === false && is_null($iblockId) === false) {
             $dbElements = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => reset($iblockId),
+                    "IBLOCK_ID" => $iblockId,
                     "ACTIVE" => "Y",
                     "CODE" => $code
                 ),
@@ -205,17 +203,18 @@ class ShortLinks extends Iblock
     }
 
     /**
+     * Удаление всех неактивных неактивных ссылок
      * @return array
      */
     public function deleteDieLink(): array
     {
         $idlist = array();
-        if ($this->isModuleReady() && $this->iblockIdEmpty() === false) {
-            $iblockId = $this->getIblockId();
+        $iblockId = $this->getIblockIdByArray();
+        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && is_null($iblockId) === false) {
             $dbElement = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => reset($iblockId),
+                    "IBLOCK_ID" => $iblockId,
                     "!ACTIVE_DATE" => "Y",
                     false,
                     false,
@@ -224,7 +223,7 @@ class ShortLinks extends Iblock
             );
 
             while ($element = $dbElement->Fetch()) {
-                array_push($idlist, $element['ID']);
+                $idlist[] = $element['ID'];
                 \CIBlockElement::Delete($element["ID"]);
             }
         }
@@ -238,12 +237,12 @@ class ShortLinks extends Iblock
     public function getUrlFromId(int $id): array
     {
         $arrUrl = array();
-        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && $id) {
-            $iblockId = $this->getIblockId();
+        $iblockId = $this->getIblockId();
+        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && $id && is_null($iblockId) === false) {
             $dbElement = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => reset($iblockId),
+                    "IBLOCK_ID" => $iblockId,
                     "ID" => $id,
                 ),
                 false,
@@ -265,12 +264,12 @@ class ShortLinks extends Iblock
     public function getShortLinkFromCode(string $code): string
     {
         $url = "";
-        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && strlen($code)) {
-            $iblockId = $this->getIblockId();
+        $iblockId = $this->getIblockIdByArray();
+        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && strlen($code) && is_null($iblockId) === false) {
             $dbElements = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => reset($iblockId),
+                    "IBLOCK_ID" => $iblockId,
                     "ACTIVE" => "Y",
                     "CODE" => $code
                 ),
@@ -296,12 +295,12 @@ class ShortLinks extends Iblock
     public function getIdShortLinkUserFromUrl(string $url, string $getParams): int
     {
         $idShortLink = 0;
-        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && strlen($url)) {
-            $iblockId = $this->getIblockId();
+        $iblockId = $this->getIblockIdByArray();
+        if ($this->isModuleReady() && $this->iblockIdEmpty() === false && strlen($url) && is_null($iblockId) === false) {
             $dbElements = \CIBlockElement::GetList(
                 array(),
                 array(
-                    "IBLOCK_ID" => reset($iblockId),
+                    "IBLOCK_ID" => $iblockId,
                     "ACTIVE" => "Y",
                     "NAME" => $this->getTransformUrl($url),
                     "PROPERTY_" . self::PROPERTY_GET_PARAMS => $this->getTransformUrl($getParams),
@@ -337,6 +336,16 @@ class ShortLinks extends Iblock
         return false;
     }
 
+    /**
+     * Проверка доступа к элементу
+     * @param int $id
+     * @return bool
+     */
+    protected function checkAccess(int $id): bool
+    {
+        $source = new Source();
+        return $this->isElementByUser($id) || $source->isAdmin();
+    }
 
     /**
      * @param string $url
@@ -349,21 +358,23 @@ class ShortLinks extends Iblock
 
     /**
      * @param int $id
-     * @param int|null $count
+     * @param int $count
      * @return void
      */
-    private function updateCounter(int $id, ?int $count): void
+    private function updateCounter(int $id, int $count): void
     {
-        if($this->isModuleReady() && $this->iblockIdEmpty() === false) {
+        $iblockId = $this->getIblockIdByArray();
+
+        if($this->isModuleReady() && $this->iblockIdEmpty() === false && is_null($iblockId) === false) {
             if (is_numeric($count)) {
                 $count = intval($count);
             } else {
                 $count = 0;
             }
-            $iblockId = $this->getIblockId();
+
             \CIBlockElement::SetPropertyValuesEx(
                 $id,
-                reset($iblockId),
+                $iblockId,
                 array(
                     self::PROPERTY_COUNT_VIEWS => $count + 1
                 )
